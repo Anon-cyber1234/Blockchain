@@ -67,8 +67,9 @@ void generateDigest(struct Digest* digest, struct User* User) {
     unsigned char data[20 + sizeof(time_t) + DIGEST_SIZE];
     size_t offset = 0;
 
-    memcpy(data + offset, User->Username, 20);
-    offset += 20;
+    size_t nameLength = strlen(User->Username);
+    memcpy(data + offset, User->Username, nameLength);
+    offset += nameLength;
 
     memcpy(data + offset, &(User->loginTime), sizeof(time_t));
     offset += sizeof(time_t);

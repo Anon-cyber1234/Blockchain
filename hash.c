@@ -1,5 +1,6 @@
 #include "hash.h"
 
+
 unsigned char* SSHA(const unsigned char* msg, size_t length) {
     unsigned char A = 56;
     unsigned char B = 99;
@@ -7,26 +8,38 @@ unsigned char* SSHA(const unsigned char* msg, size_t length) {
     unsigned char D = 67;
     unsigned char E = 76;
 
-    for (int i = 0; i < length; i++) {
+    for (size_t i = 0; i < length; i++) {
         for (int round = 0; round < 8; round++) {
-            unsigned char g = (B & C) | (C & D);
-            unsigned char old_A = A;
-            A = A ^ B;
-            B = B ^ (A >> 1); // Non-destructive shift
-            E = (g + msg[i] + B);
-            D = A ^ B;
-            C = (A + E);
-            A = E;
-            B = old_A;
+
+            unsigned char oldA = A;
+            unsigned char oldB = B;
+            unsigned char oldC = C;
+            unsigned char oldD = D;
+            unsigned char oldE = E;
+
+            A = oldE;
+            B = oldA;
+            C = (unsigned char)(oldE + (oldA >> 2));
+            D = (unsigned char)((oldA >> 2) ^ (oldB >> 1));
+            E = (unsigned char)(
+                ((oldB & oldC) | (oldC & oldD)) + msg[i]
+                );
         }
     }
 
-    unsigned char* digest = (unsigned char*)malloc(DIGEST_SIZE * sizeof(unsigned char));
+    unsigned char* digest =
+        (unsigned char*)malloc(DIGEST_SIZE * sizeof(unsigned char));
+
+    if (digest == NULL) {
+        return NULL;
+    }
+
     digest[0] = A;
     digest[1] = B;
     digest[2] = C;
     digest[3] = D;
-    digest[4] = D;
+    digest[4] = E;
+
     return digest;
 }
 
