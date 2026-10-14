@@ -11,5 +11,7 @@ struct Digest {
 
 //unsigned char* toString(struct Block* blk);
 unsigned char* SSHA(const unsigned char* str, size_t size);
+unsigned char* SSHA(const unsigned char* msg, size_t size);
+
 int digest_equal(struct Digest digest1, struct Digest digest2);
 void printDigest(struct Digest digest);
