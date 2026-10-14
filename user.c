@@ -8,7 +8,7 @@
 struct User* add(struct User * head, char* Username) {
 	Sleep((rand() % 10 + 1) * 1000);
 
-	struct User* newHead = (struct User*)malloc(sizeof(struct User));
+	struct User* newHead = (struct User*)calloc(1, sizeof(struct User));
 	strcpy_s(newHead->Username, sizeof(newHead->Username), Username);
 	time(&(newHead->loginTime));
     localtime_s(&(newHead->localLoginTime), &(newHead->loginTime));
@@ -64,12 +64,29 @@ void printUser(struct User* user) {
 
 
 void generateDigest(struct Digest* digest, struct User* User) {
-    unsigned char* result = SSHA((unsigned char*)User, STRUCT_SIZE); // Logical error: Incorrect data passed to SSHA
+    unsigned char data[20 + sizeof(time_t) + DIGEST_SIZE];
+    size_t offset = 0;
+
+    memcpy(data + offset, User->Username, 20);
+    offset += 20;
+
+    memcpy(data + offset, &(User->loginTime), sizeof(time_t));
+    offset += sizeof(time_t);
+
+    data[offset++] = User->hash.hash0;
+    data[offset++] = User->hash.hash1;
+    data[offset++] = User->hash.hash2;
+    data[offset++] = User->hash.hash3;
+    data[offset++] = User->hash.hash4;
+
+    unsigned char* result = SSHA(data, offset);
+
     digest->hash0 = result[0];
     digest->hash1 = result[1];
     digest->hash2 = result[2];
     digest->hash3 = result[3];
     digest->hash4 = result[4];
+
     free(result);
 }
 void verify(struct User* curr) {

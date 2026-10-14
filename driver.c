@@ -20,6 +20,26 @@ int main(void) {
 	/*head->next->hash.hash0 ^= 1;
 	printf("\ntest: modified sumita's stored hash\n");*/
 
+	/*printf("\nTEST 1: Unchanged blockchain\n");
 
 	verify(head);
+
+	strcpy_s(head->next->Username, sizeof(head->next->Username), "hacker");
+	printf("\nTEST 2: username changed from sumita to hacker\n");
+
+	verify(head);*/
+	printf("\nTEST 1: Unchanged blockchain\n");
+	verify(head);
+
+	head->next->loginTime += 3600;
+	printf("\nTEST 2: timestamp tampering\n");
+
+	/*head->next->hash.hash0 ^= 1;
+	printf("\ntest 3: stored hash modified \n");*/
+
+	/*strcpy_s(head->next->Username, sizeof(head->next->Username), "hacker");
+	printf("\nTEST 2: username tampering\n");*/
+	verify(head);
+
+
 }
