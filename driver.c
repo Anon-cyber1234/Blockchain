@@ -17,8 +17,8 @@ int main(void) {
 
 	/*head->next->loginTime += 3600;
 	printf("\n Test: Modified sumita's login timestamp by one hour \n");*/
-	head->next->hash.hash0 ^= 1;
-	printf("\ntest: modified sumita's stored hash\n");
+	/*head->next->hash.hash0 ^= 1;
+	printf("\ntest: modified sumita's stored hash\n");*/
 
 
 	verify(head);

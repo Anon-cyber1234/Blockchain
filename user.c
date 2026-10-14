@@ -14,11 +14,11 @@ struct User* add(struct User * head, char* Username) {
     localtime_s(&(newHead->localLoginTime), &(newHead->loginTime));
     newHead->next = head;
     if (head == NULL) {
-        newHead->hash.hash0 = 1; // Logical error: Incorrect hash initialization
-        newHead->hash.hash1 = 2;
-        newHead->hash.hash2 = 3;
-        newHead->hash.hash3 = 4;
-        newHead->hash.hash4 = 5;
+        newHead->hash.hash0 = 0; // Logical error: Incorrect hash initialization
+        newHead->hash.hash1 = 0;
+        newHead->hash.hash2 = 0;
+        newHead->hash.hash3 = 0;
+        newHead->hash.hash4 = 0;
     }
     else {
        
@@ -87,9 +87,9 @@ void verify(struct User* curr) {
 
         if (prev != NULL) {
             struct Digest prev_digest_computed;
-            generateDigest(&prev_digest_computed, curr); // Logical error: Incorrect node in generateDigest
+            generateDigest(&prev_digest_computed, prev); // Logical error: Incorrect node in generateDigest
 
-            if (digest_equal(prev_digest_computed, prev->hash)) { // Logical error: Comparing wrong block hashes
+            if (digest_equal(prev_digest_computed, curr->hash)) { // Logical error: Comparing wrong block hashes
                 printf("User %d passed\n", height);
                 printf("\t%-20s", "User Data:");
                 printUser(prev);
