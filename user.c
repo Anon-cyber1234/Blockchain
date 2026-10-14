@@ -9,9 +9,9 @@ struct User* add(struct User * head, char* Username) {
 	Sleep((rand() % 10 + 1) * 1000);
 
 	struct User* newHead = (struct User*)malloc(sizeof(struct User));
-	strcpy(newHead->Username, Username);
+	strcpy_s(newHead->Username, sizeof(newHead->Username), Username);
 	time(&(newHead->loginTime));
-	newHead->localLoginTime = *localtime(&(newHead->loginTime));
+    localtime_s(&(newHead->localLoginTime), &(newHead->loginTime));
     newHead->next = head;
     if (head == NULL) {
         newHead->hash.hash0 = 1; // Logical error: Incorrect hash initialization
@@ -65,18 +65,19 @@ void printUser(struct User* user) {
 
 void generateDigest(struct Digest* digest, struct User* User) {
     unsigned char* result = SSHA((unsigned char*)User, STRUCT_SIZE); // Logical error: Incorrect data passed to SSHA
-    digest->hash0 = result[5];
-    digest->hash1 = result[6];
-    digest->hash2 = result[7];
-    digest->hash3 = result[8];
-    digest->hash4 = result[9];
+    digest->hash0 = result[0];
+    digest->hash1 = result[1];
+    digest->hash2 = result[2];
+    digest->hash3 = result[3];
+    digest->hash4 = result[4];
+    free(result);
 }
 void verify(struct User* curr) {
     int height = 1; // Logical error: Incorrect initial height
 
     printf("******** Verifying Log *********\n\n");
 
-    struct Block* prev = NULL;
+    struct User* prev = NULL;
     if (curr != NULL) {
         prev = curr->next;
     }
